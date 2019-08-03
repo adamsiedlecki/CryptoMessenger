@@ -18,42 +18,26 @@ public class WritePanel extends Panel {
     private Button sendButton;
     private HorizontalLayout root;
     private Upload upload;
-    ImageUploader imageUploader;
     final Embedded image = new Embedded("Uploaded Image");
+    private Panel uploadPanel;
 
 
     public WritePanel(){
 
         messageArea = new TextArea("Message (max 117 characters)");
         publicKeyArea = new TextArea("Public Key ");
-        imageUploader = new ImageUploader();
 
 
 
-        image.setVisible(false);
-        ImageUploader receiver = new ImageUploader();
-// Create the upload with a caption and set receiver later
-        Upload upload = new Upload("Upload Image Here", receiver);
-        upload.setButtonCaption("Start Upload");
-        upload.addSucceededListener(receiver);
-
-// Put the components in a panel
-        Panel panel = new Panel("Cool Image Storage");
-        Layout panelContent = new VerticalLayout();
-        panelContent.addComponents(upload, image);
-        panel.setContent(panelContent);
-       // upload = new Upload("UPLOAD",imageUploader);
-        //upload.setButtonCaption("Upload file");
-        //upload.addSucceededListener(imageUploader);
 
         sendButton = new Button("SEND");
         root = new HorizontalLayout();
 
         setComponentsSizeAndProperties();
-        root.addComponents(messageArea,publicKeyArea,sendButton,panel);
+        root.addComponents(messageArea,publicKeyArea,sendButton,uploadPanel);
         root.setComponentAlignment(messageArea, Alignment.MIDDLE_CENTER);
         root.setComponentAlignment(publicKeyArea, Alignment.MIDDLE_CENTER);
-        root.setComponentAlignment(panel, Alignment.MIDDLE_CENTER);
+        root.setComponentAlignment(uploadPanel, Alignment.MIDDLE_CENTER);
         root.setComponentAlignment(sendButton, Alignment.MIDDLE_CENTER);
 
         setContent(root);
@@ -74,9 +58,31 @@ public class WritePanel extends Panel {
         sendButton.setWidth(80,Unit.PIXELS);
         sendButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
-        root.setHeight(100,Unit.PIXELS);
+        //root.setHeight(100,Unit.PIXELS);
+        setFileUpload();
+
+    }
+
+    private void setFileUpload(){
+        image.setVisible(false);
+        image.setWidth(100,Unit.PIXELS);
+        image.setHeight(100,Unit.PIXELS);
+
+        ImageUploader receiver = new ImageUploader();
+        // Create the upload with a caption and set receiver later
+        Upload upload = new Upload("Upload Image Here", receiver);
+        upload.setButtonCaption("Start Upload");
+        upload.addSucceededListener(receiver);
 
 
+        // Put the components in a panel
+        uploadPanel = new Panel("Image Uploader");
+        Layout panelContent = new VerticalLayout();
+        panelContent.addComponents(upload, image);
+        uploadPanel.setContent(panelContent);
+        // upload = new Upload("UPLOAD",imageUploader);
+        //upload.setButtonCaption("Upload file");
+        //upload.addSucceededListener(imageUploader);
     }
 
     public Upload getUpload() { return upload; }
@@ -106,10 +112,10 @@ public class WritePanel extends Panel {
             FileOutputStream fos = null; // Stream to write to
             try {
                 // Open the file for writing.
-                file = new File("/tmp/uploads/" + filename);
+                file = new File("C:\\Users\\AdamPC\\Desktop\\uploads\\" + filename);
                 fos = new FileOutputStream(file);
             } catch (final java.io.FileNotFoundException e) {
-                new Notification("Could not open file<br/>",
+                new Notification("Could not open file",
                         e.getMessage(),
                         Notification.Type.ERROR_MESSAGE)
                         .show(Page.getCurrent());
@@ -122,6 +128,7 @@ public class WritePanel extends Panel {
             // Show the uploaded file in the image viewer
             image.setVisible(true);
             image.setSource(new FileResource(file));
+            System.out.println(file.getAbsolutePath());
         }
     }
 

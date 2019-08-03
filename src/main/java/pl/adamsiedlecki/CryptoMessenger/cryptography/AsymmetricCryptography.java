@@ -30,7 +30,7 @@ public class AsymmetricCryptography {
     }
 
 
-    public  PublicKey getPublicKey(String base64PublicKey){
+    private  PublicKey getPublicKey(String base64PublicKey){
         PublicKey publicKey = null;
         try{
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(base64PublicKey.getBytes()));
