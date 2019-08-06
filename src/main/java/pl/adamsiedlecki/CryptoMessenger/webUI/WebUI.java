@@ -1,14 +1,18 @@
 package pl.adamsiedlecki.CryptoMessenger.webUI;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import pl.adamsiedlecki.CryptoMessenger.cryptography.AsymmetricCryptography;
+import pl.adamsiedlecki.CryptoMessenger.cryptography.SHAUtility;
+import pl.adamsiedlecki.CryptoMessenger.cryptography.SymmetricCryptography;
 import pl.adamsiedlecki.CryptoMessenger.dao.MessageDAO;
 import pl.adamsiedlecki.CryptoMessenger.entity.Message;
+import pl.adamsiedlecki.CryptoMessenger.fileOperations.ImageConverter;
 import pl.adamsiedlecki.CryptoMessenger.webUI.panels.FooterPanel;
 import pl.adamsiedlecki.CryptoMessenger.webUI.panels.HeaderPanel;
 import pl.adamsiedlecki.CryptoMessenger.webUI.panels.MessagesPanel;
@@ -17,6 +21,7 @@ import pl.adamsiedlecki.CryptoMessenger.webUI.panels.WritePanel;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.io.File;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Time;
@@ -50,7 +55,11 @@ public class WebUI extends UI {
         headerPanel.getButton().addClickListener(x ->messagesPanel.setMessages(getMessages(),headerPanel.getPrivateKey()));
 
         writePanel.getSendButton().addClickListener(x ->{
-            if("".equals(writePanel.getMessage())){
+            if("".equals(writePanel.getMessageArea())||writePanel.getUpload().isUploading()){
+                Notification.show("You cannot upload image without message!");
+                return;
+            }
+            if("".equals(writePanel.getMessageArea())){
                 Notification.show("Message cannot be empty. Have a good day!");
                 return;
             }
@@ -66,7 +75,7 @@ public class WebUI extends UI {
             AsymmetricCryptography ac = new AsymmetricCryptography();
             byte[] encrypted = new byte[0];
             try {
-                encrypted = ac.encrypt(writePanel.getMessage(),writePanel.getPublicKey());
+                encrypted = ac.encrypt(writePanel.getMessageArea().getValue(),writePanel.getPublicKey());
             } catch (BadPaddingException e) {
                 e.printStackTrace();
             } catch (IllegalBlockSizeException e) {
@@ -79,12 +88,54 @@ public class WebUI extends UI {
                 e.printStackTrace();
             }
             String encryptedString = Base64.encode(encrypted);
-            //System.out.println("Encrypte String: "+encryptedString);
-            messageDAO.saveAndFlush(new Message(encryptedString, Time.from(Instant.now()),headerPanel.getRoom()));
+            //System.out.println("Encrypte String: "+encryptedString)
+
+            String imageEncrypted = "";
+
+            if(writePanel.getImage().isVisible()){
+                imageEncrypted = encryptImage();
+            }
+
+            //System.out.println(imageEncrypted);
+
+            messageDAO.saveAndFlush(new Message(encryptedString, Time.from(Instant.now()),headerPanel.getRoom(),imageEncrypted));
             messagesPanel.setMessages(getMessages(),headerPanel.getPrivateKey());
+
+            cleanFields();
         }
         );
 
+    }
+
+    private String encryptImage(){
+       // if(!writePanel.getUpload().isUploading()) {
+            //if(writePanel.getUpload().getUploadSize()>0){
+
+                String path = writePanel.getLastImagePath();
+//                if(path==null){
+//                    return "";
+//                }
+                File file = new File(path); // here i need to encrypt the image
+                String symmetricKey = SHAUtility.getSHA(writePanel.getMessageArea().getValue());
+                String imageBytes = null;
+                try {
+                    imageBytes = ImageConverter.encodeFileToBase64Binary(file);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                byte[] imageEncrypted = SymmetricCryptography.encrypt(imageBytes,symmetricKey);
+
+                return Base64.encode(imageEncrypted);
+            //}
+        //}
+        //return "";
+    }
+
+    private void cleanFields(){
+        //writePanel.getUpload();
+        writePanel.getMessageArea().clear();
+        writePanel.getImage().setVisible(false);
+        footerPanel.focus();  //maybe works
     }
 
     @Override

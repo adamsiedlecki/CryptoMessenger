@@ -22,7 +22,18 @@ public class Message {
     @Column
     private String room;
 
+    @Column
+    private String encryptedImage;
+
     public Message() {
+    }
+
+    public String getEncryptedImage() {
+        return encryptedImage;
+    }
+
+    public void setEncryptedImage(String encryptedImage) {
+        this.encryptedImage = encryptedImage;
     }
 
     public String getRoom() {
@@ -33,10 +44,11 @@ public class Message {
         this.room = room;
     }
 
-    public Message(String text, Date date, String room) {
+    public Message(String text, Date date, String room, String encryptedImage) {
         this.text = text;
         this.date = date;
         this.room = room;
+        this.encryptedImage = encryptedImage;
     }
 
     public long getId() {

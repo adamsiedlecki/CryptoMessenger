@@ -22,19 +22,24 @@ public class WritePanel extends Panel {
     private Panel uploadPanel;
 
 
+    public Embedded getImage() {
+        return image;
+    }
+
+    public Panel getUploadPanel() {
+        return uploadPanel;
+    }
+
     public WritePanel(){
 
         messageArea = new TextArea("Message (max 117 characters)");
         publicKeyArea = new TextArea("Public Key ");
 
-
-
-
         sendButton = new Button("SEND");
         root = new HorizontalLayout();
 
         setComponentsSizeAndProperties();
-        root.addComponents(messageArea,publicKeyArea,sendButton,uploadPanel);
+        root.addComponents(messageArea,publicKeyArea,uploadPanel, sendButton);
         root.setComponentAlignment(messageArea, Alignment.MIDDLE_CENTER);
         root.setComponentAlignment(publicKeyArea, Alignment.MIDDLE_CENTER);
         root.setComponentAlignment(uploadPanel, Alignment.MIDDLE_CENTER);
@@ -70,8 +75,10 @@ public class WritePanel extends Panel {
 
         ImageUploader receiver = new ImageUploader();
         // Create the upload with a caption and set receiver later
-        Upload upload = new Upload("Upload Image Here", receiver);
+        upload = new Upload("Upload Image Here", receiver);
         upload.setButtonCaption("Start Upload");
+        upload.setAcceptMimeTypes("image");
+        //upload.setImmediateMode(false);
         upload.addSucceededListener(receiver);
 
 
@@ -87,8 +94,8 @@ public class WritePanel extends Panel {
 
     public Upload getUpload() { return upload; }
 
-    public String getMessage() {
-        return messageArea.getValue();
+    public TextArea getMessageArea() {
+        return messageArea;
     }
 
     public String getPublicKey(){
@@ -103,6 +110,12 @@ public class WritePanel extends Panel {
 
     // Implement both receiver that saves upload in a file and
 // listener for successful upload
+
+    public String getLastImagePath() {
+        return lastImagePath;
+    }
+
+    private String lastImagePath;
     class ImageUploader implements Upload.Receiver, Upload.SucceededListener {
         public File file;
 
@@ -113,6 +126,7 @@ public class WritePanel extends Panel {
             try {
                 // Open the file for writing.
                 file = new File("C:\\Users\\AdamPC\\Desktop\\uploads\\" + filename);
+                lastImagePath = file.getAbsolutePath();
                 fos = new FileOutputStream(file);
             } catch (final java.io.FileNotFoundException e) {
                 new Notification("Could not open file",

@@ -1,14 +1,19 @@
 package pl.adamsiedlecki.CryptoMessenger.webUI.panels;
 
+import com.vaadin.server.FileResource;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 
 import pl.adamsiedlecki.CryptoMessenger.cryptography.AsymmetricCryptography;
+import pl.adamsiedlecki.CryptoMessenger.cryptography.SHAUtility;
+import pl.adamsiedlecki.CryptoMessenger.cryptography.SymmetricCryptography;
 import pl.adamsiedlecki.CryptoMessenger.entity.Message;
+import pl.adamsiedlecki.CryptoMessenger.fileOperations.ImageConverter;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.io.File;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -32,10 +37,6 @@ public class MessagesPanel extends Panel {
 
     public void setMessages(List<Message> messages, String privateKey){
 
-        for(Panel p: panels){
-            root.removeComponent(p);
-        }
-
         for(Message message : messages){
 
             String decrypted = decrypt(message.getText(),privateKey);
@@ -51,14 +52,40 @@ public class MessagesPanel extends Panel {
             Label label = new Label(decrypted, ContentMode.PREFORMATTED );
             label.setWidth(80,Unit.PERCENTAGE);
 
-            Panel messagePanel = new Panel(new HorizontalLayout(label,new Label(message.getDate().toString())));
+            HorizontalLayout horizontalLayout = new HorizontalLayout();
+            horizontalLayout.addComponents(label,new Label(message.getDate().toString()));
+
+            Panel messagePanel = new Panel(horizontalLayout);
             messagePanel.setHeight(100,Unit.PIXELS);
+
+            if(message.getEncryptedImage()!=null&&!"".equals(message.getEncryptedImage())){
+                loadImage(message,privateKey,horizontalLayout, messagePanel);
+            }
 
             panels.add(messagePanel);
 
-
             root.addComponent(messagePanel);
         }
+    }
+
+    private int count = 0;
+    private void loadImage(Message message, String privateKey, HorizontalLayout layout, Panel panel){
+        String temp = message.getText();
+
+        String imageEncrypted = message.getEncryptedImage();
+        byte[] byteImage = Base64.getDecoder().decode(imageEncrypted);
+
+        temp = decrypt(temp,privateKey);
+        String key = SHAUtility.getSHA(temp);
+        String image = SymmetricCryptography.decrypt(byteImage,key);
+        File f = ImageConverter.decodeBase64BinaryToFile(image,"src/main/uploads/decoded"+count+".jpg");
+        count++;
+        Embedded embedded = new Embedded();
+        embedded.setSource(new FileResource(f));
+        layout.addComponent(embedded);
+        float h = embedded.getHeight();
+        layout.setHeight(h,embedded.getHeightUnits());
+        panel.setHeight(h,embedded.getHeightUnits());
     }
 
     private String decrypt(String message,String privateKey){
@@ -76,13 +103,14 @@ public class MessagesPanel extends Panel {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         } catch (BadPaddingException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+
         } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         } catch (InvalidKeyException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return message;
     }
