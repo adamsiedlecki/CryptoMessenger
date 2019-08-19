@@ -1,11 +1,11 @@
 package pl.adamsiedlecki.CryptoMessenger.cryptography;
 
+import com.vaadin.ui.Notification;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -29,7 +29,6 @@ public class AsymmetricCryptography {
         return new String(cipher.doFinal(data));
     }
 
-
     private  PublicKey getPublicKey(String base64PublicKey){
         PublicKey publicKey = null;
         try{
@@ -45,8 +44,6 @@ public class AsymmetricCryptography {
         return publicKey;
     }
 
-
-
     public PrivateKey getPrivateKey(String base64PrivateKey){
         PrivateKey privateKey = null;
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(base64PrivateKey.getBytes()));
@@ -59,7 +56,8 @@ public class AsymmetricCryptography {
         try {
             privateKey = keyFactory.generatePrivate(keySpec);
         } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
+            Notification.show("Invalid private key. Maybe space on the end? Have a nice day!");
+            //e.printStackTrace();
         }
         return privateKey;
     }

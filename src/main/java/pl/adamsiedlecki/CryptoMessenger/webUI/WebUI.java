@@ -1,7 +1,6 @@
 package pl.adamsiedlecki.CryptoMessenger.webUI;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
-import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.Notification;
@@ -17,7 +16,6 @@ import pl.adamsiedlecki.CryptoMessenger.webUI.panels.FooterPanel;
 import pl.adamsiedlecki.CryptoMessenger.webUI.panels.HeaderPanel;
 import pl.adamsiedlecki.CryptoMessenger.webUI.panels.MessagesPanel;
 import pl.adamsiedlecki.CryptoMessenger.webUI.panels.WritePanel;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;

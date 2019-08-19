@@ -4,12 +4,10 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Page;
 import com.vaadin.ui.*;
-
+import pl.adamsiedlecki.CryptoMessenger.config.Config;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-
-
 
 public class WritePanel extends Panel {
 
@@ -18,17 +16,9 @@ public class WritePanel extends Panel {
     private Button sendButton;
     private HorizontalLayout root;
     private Upload upload;
-    final Embedded image = new Embedded("Uploaded Image");
+    private final Embedded image = new Embedded("Uploaded Image");
     private Panel uploadPanel;
-
-
-    public Embedded getImage() {
-        return image;
-    }
-
-    public Panel getUploadPanel() {
-        return uploadPanel;
-    }
+    private String lastImagePath;
 
     public WritePanel(){
 
@@ -48,24 +38,20 @@ public class WritePanel extends Panel {
         setContent(root);
     }
 
+    public Embedded getImage() {
+        return image;
+    }
+
     private void setComponentsSizeAndProperties(){
         root.setWidth(90,Unit.PERCENTAGE);
-        //messageArea.setWidth(55,Unit.PERCENTAGE);
         messageArea.setSizeFull();
         messageArea.setRows(1);
         messageArea.setMaxLength(117);
-
-        //publicKeyArea.setWidth(55,Unit.PERCENTAGE);
         publicKeyArea.setRows(1);
         publicKeyArea.setSizeFull();
-
-        //sendButton.setHeight(publicKeyArea.getHeight()*4,publicKeyArea.getHeightUnits());
         sendButton.setWidth(80,Unit.PIXELS);
         sendButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-
-        //root.setHeight(100,Unit.PIXELS);
         setFileUpload();
-
     }
 
     private void setFileUpload(){
@@ -81,15 +67,11 @@ public class WritePanel extends Panel {
         //upload.setImmediateMode(false);
         upload.addSucceededListener(receiver);
 
-
         // Put the components in a panel
         uploadPanel = new Panel("Image Uploader");
         Layout panelContent = new VerticalLayout();
         panelContent.addComponents(upload, image);
         uploadPanel.setContent(panelContent);
-        // upload = new Upload("UPLOAD",imageUploader);
-        //upload.setButtonCaption("Upload file");
-        //upload.addSucceededListener(imageUploader);
     }
 
     public Upload getUpload() { return upload; }
@@ -106,18 +88,15 @@ public class WritePanel extends Panel {
         return sendButton;
     }
 
-    ///
-
     // Implement both receiver that saves upload in a file and
-// listener for successful upload
+    // listener for successful upload
 
     public String getLastImagePath() {
         return lastImagePath;
     }
 
-    private String lastImagePath;
     class ImageUploader implements Upload.Receiver, Upload.SucceededListener {
-        public File file;
+        private File file;
 
         public OutputStream receiveUpload(String filename,
                                           String mimeType) {
@@ -125,7 +104,7 @@ public class WritePanel extends Panel {
             FileOutputStream fos = null; // Stream to write to
             try {
                 // Open the file for writing.
-                file = new File("C:\\Users\\AdamPC\\Desktop\\uploads\\" + filename);
+                file = new File(Config.getImagePath() + filename);
                 lastImagePath = file.getAbsolutePath();
                 fos = new FileOutputStream(file);
             } catch (final java.io.FileNotFoundException e) {
@@ -145,7 +124,6 @@ public class WritePanel extends Panel {
             System.out.println(file.getAbsolutePath());
         }
     }
-
 }
 
 
