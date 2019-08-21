@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class ImageConverter {
 
@@ -13,7 +14,7 @@ public class ImageConverter {
         FileInputStream fileInputStreamReader = new FileInputStream(file);
         byte[] bytes = new byte[(int)file.length()];
         fileInputStreamReader.read(bytes);
-        return new String(Base64.encodeBase64(bytes), "UTF-8");
+        return new String(Base64.encodeBase64(bytes), StandardCharsets.UTF_8);
     }
 
     public static File decodeBase64BinaryToFile(String base64Binary, String pathForFile) {

@@ -1,6 +1,6 @@
 package pl.adamsiedlecki.CryptoMessenger.webUI;
 
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import java.util.Base64;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.Notification;
@@ -85,7 +85,7 @@ public class WebUI extends UI {
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
-            String encryptedString = Base64.encode(encrypted);
+            String encryptedString = Base64.getEncoder().encodeToString(encrypted);
             //System.out.println("Encrypte String: "+encryptedString)
 
             String imageEncrypted = "";
@@ -123,7 +123,7 @@ public class WebUI extends UI {
                 }
                 byte[] imageEncrypted = SymmetricCryptography.encrypt(imageBytes,symmetricKey);
 
-                return Base64.encode(imageEncrypted);
+                return Base64.getEncoder().encodeToString(imageEncrypted);
             //}
         //}
         //return "";
