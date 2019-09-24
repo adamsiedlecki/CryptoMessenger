@@ -22,6 +22,7 @@ public class Message {
     private String room;
 
     @Column
+    @Lob
     private String encryptedImage;
 
     public Message() {
