@@ -53,11 +53,11 @@ public class WebUI extends UI {
         headerPanel.getButton().addClickListener(x ->messagesPanel.setMessages(getMessages(),headerPanel.getPrivateKey()));
 
         writePanel.getSendButton().addClickListener(x ->{
-            if("".equals(writePanel.getMessageArea())||writePanel.getUpload().isUploading()){
+            if("".equals(writePanel.getMessageArea().getValue())||writePanel.getUpload().isUploading()){
                 Notification.show("You cannot upload image without message!");
                 return;
             }
-            if("".equals(writePanel.getMessageArea())){
+            if("".equals(writePanel.getMessageArea().getValue())){
                 Notification.show("Message cannot be empty. Have a good day!");
                 return;
             }
@@ -106,13 +106,8 @@ public class WebUI extends UI {
     }
 
     private String encryptImage(){
-       // if(!writePanel.getUpload().isUploading()) {
-            //if(writePanel.getUpload().getUploadSize()>0){
-
                 String path = writePanel.getLastImagePath();
-//                if(path==null){
-//                    return "";
-//                }
+
                 File file = new File(path); // here i need to encrypt the image
                 String symmetricKey = SHAUtility.getSHA(writePanel.getMessageArea().getValue());
                 String imageBytes = null;
@@ -124,9 +119,6 @@ public class WebUI extends UI {
                 byte[] imageEncrypted = SymmetricCryptography.encrypt(imageBytes,symmetricKey);
 
                 return Base64.getEncoder().encodeToString(imageEncrypted);
-            //}
-        //}
-        //return "";
     }
 
     private void cleanFields(){

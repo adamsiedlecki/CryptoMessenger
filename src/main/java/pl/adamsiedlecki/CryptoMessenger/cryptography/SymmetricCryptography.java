@@ -13,11 +13,7 @@ public class SymmetricCryptography {
         SecretKey secKey = null;
         byte[] byteCipherText = null;
         try {
-            //KeyGenerator generator = KeyGenerator.getInstance("AES");
-            //generator.init(256); // The AES key size in number of bits
-            //secKey = generator.generateKey();
             byte[] key = keyString.getBytes(StandardCharsets.UTF_8);
-            //System.out.println(Arrays.toString(key));
             secKey = new SecretKeySpec(key, "AES");
             aesCipher = Cipher.getInstance("AES");
         } catch (NoSuchAlgorithmException e) {
