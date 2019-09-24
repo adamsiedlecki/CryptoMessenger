@@ -1,6 +1,5 @@
 package pl.adamsiedlecki.CryptoMessenger.entity;
 
-import javax.annotation.processing.Generated;
 import javax.persistence.*;
 import java.util.Date;
 

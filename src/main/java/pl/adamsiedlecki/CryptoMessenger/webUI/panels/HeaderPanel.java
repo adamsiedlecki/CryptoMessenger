@@ -6,7 +6,7 @@ import com.vaadin.ui.*;
 
 public class HeaderPanel extends Panel {
 
-    private  VerticalLayout root;
+    private VerticalLayout root;
     private TextArea roomIdArea;
     private TextArea privateKeyArea;
     private Button goToRoom;
@@ -17,15 +17,15 @@ public class HeaderPanel extends Panel {
         this.setContent(root);
     }
 
-    public String getRoom(){
+    public String getRoom() {
         return roomIdArea.getValue();
     }
 
-    public String getPrivateKey(){
+    public String getPrivateKey() {
         return privateKeyArea.getValue();
     }
 
-    private void setComponents(){
+    private void setComponents() {
         Label main = new Label("Hi! I am CryptoMessenger! ");
         main.setStyleName("h1");
         Label description = new Label("I can give you an opportunity to be some kind of anonymous.", ContentMode.PREFORMATTED);
@@ -41,15 +41,15 @@ public class HeaderPanel extends Panel {
         HorizontalLayout horizontalLayout = new HorizontalLayout(roomIdArea, privateKeyArea, goToRoom);
         horizontalLayout.setCaption("Enter room id in the first box and private key in a second box :)");
 
-        root = new VerticalLayout(main,description,generatorLink, horizontalLayout);
+        root = new VerticalLayout(main, description, generatorLink, horizontalLayout);
 
-        root.setComponentAlignment(main,Alignment.MIDDLE_CENTER);
-        root.setComponentAlignment(description,Alignment.MIDDLE_CENTER);
-        root.setComponentAlignment(generatorLink,Alignment.MIDDLE_CENTER);
-        root.setComponentAlignment(horizontalLayout,Alignment.MIDDLE_CENTER);
+        root.setComponentAlignment(main, Alignment.MIDDLE_CENTER);
+        root.setComponentAlignment(description, Alignment.MIDDLE_CENTER);
+        root.setComponentAlignment(generatorLink, Alignment.MIDDLE_CENTER);
+        root.setComponentAlignment(horizontalLayout, Alignment.MIDDLE_CENTER);
     }
 
-    public Button getButton(){
+    public Button getButton() {
         return goToRoom;
     }
 

@@ -8,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class SymmetricCryptography {
 
-    public static byte[] encrypt(String data, String keyString){
+    public static byte[] encrypt(String data, String keyString) {
         Cipher aesCipher = null;
         SecretKey secKey = null;
         byte[] byteCipherText = null;
@@ -37,7 +37,7 @@ public class SymmetricCryptography {
         return byteCipherText;
     }
 
-    public static String decrypt(byte[] data, String keyString){
+    public static String decrypt(byte[] data, String keyString) {
         Cipher aesCipher = null;
         SecretKey secKey;
         byte[] byteCipherText = null;
@@ -62,7 +62,7 @@ public class SymmetricCryptography {
             e.printStackTrace();
         }
 
-        return new String(byteCipherText) ;
+        return new String(byteCipherText);
     }
 
 }

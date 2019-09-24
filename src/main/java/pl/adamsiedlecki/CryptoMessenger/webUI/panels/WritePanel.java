@@ -5,6 +5,7 @@ import com.vaadin.server.FileResource;
 import com.vaadin.server.Page;
 import com.vaadin.ui.*;
 import pl.adamsiedlecki.CryptoMessenger.config.Config;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -20,7 +21,7 @@ public class WritePanel extends Panel {
     private Panel uploadPanel;
     private String lastImagePath;
 
-    public WritePanel(){
+    public WritePanel() {
 
         messageArea = new TextArea("Message (max 117 characters)");
         publicKeyArea = new TextArea("Public Key ");
@@ -29,7 +30,7 @@ public class WritePanel extends Panel {
         root = new HorizontalLayout();
 
         setComponentsSizeAndProperties();
-        root.addComponents(messageArea,publicKeyArea,uploadPanel, sendButton);
+        root.addComponents(messageArea, publicKeyArea, uploadPanel, sendButton);
         root.setComponentAlignment(messageArea, Alignment.MIDDLE_CENTER);
         root.setComponentAlignment(publicKeyArea, Alignment.MIDDLE_CENTER);
         root.setComponentAlignment(uploadPanel, Alignment.MIDDLE_CENTER);
@@ -42,22 +43,22 @@ public class WritePanel extends Panel {
         return image;
     }
 
-    private void setComponentsSizeAndProperties(){
-        root.setWidth(90,Unit.PERCENTAGE);
+    private void setComponentsSizeAndProperties() {
+        root.setWidth(90, Unit.PERCENTAGE);
         messageArea.setSizeFull();
         messageArea.setRows(1);
         messageArea.setMaxLength(117);
         publicKeyArea.setRows(1);
         publicKeyArea.setSizeFull();
-        sendButton.setWidth(80,Unit.PIXELS);
+        sendButton.setWidth(80, Unit.PIXELS);
         sendButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         setFileUpload();
     }
 
-    private void setFileUpload(){
+    private void setFileUpload() {
         image.setVisible(false);
-        image.setWidth(100,Unit.PIXELS);
-        image.setHeight(100,Unit.PIXELS);
+        image.setWidth(100, Unit.PIXELS);
+        image.setHeight(100, Unit.PIXELS);
 
         ImageUploader receiver = new ImageUploader();
         // Create the upload with a caption and set receiver later
@@ -74,13 +75,15 @@ public class WritePanel extends Panel {
         uploadPanel.setContent(panelContent);
     }
 
-    public Upload getUpload() { return upload; }
+    public Upload getUpload() {
+        return upload;
+    }
 
     public TextArea getMessageArea() {
         return messageArea;
     }
 
-    public String getPublicKey(){
+    public String getPublicKey() {
         return publicKeyArea.getValue();
     }
 

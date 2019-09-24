@@ -5,7 +5,7 @@ import pl.adamsiedlecki.CryptoMessenger.entity.Message;
 
 import java.util.List;
 
-public interface MessageDAO extends JpaRepository<Message,Long> {
+public interface MessageDAO extends JpaRepository<Message, Long> {
 
     List<Message> getAllByRoomIs(String room);
 }
